@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusketeerExam - Lärarvy</title>
+    <link rel="stylesheet" href="lärarvy.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>MusketeerExam</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#"><i class="fas fa-home"></i> Översikt</a></li>
+                    <li><a href="https://web.skola24.se/timetable/timetable-viewer/arboga.skola24.se/H%C3%B6gskolecentrum/" target="_blank"><i class="fas fa-calendar-alt"></i> Schema</a></li>
+                </ul>
+            </nav>
+            <div class="user-panel">
+                <a href="support.html"><i class="fas fa-question-circle"></i> Support</a>
+                <a href="login.html" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logga ut</a>
+            </div>
+        </header>
+        
+        <main>
+            <div class="content-header">
+                <h2>Betygssättning - Elever</h2>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active">Elevöversikt (3)</div>
+            </div>
+
+            <div class="filter-section">
+                <div class="sort">
+                    <label for="sort">Sortera:</label>
+                    <select id="sort" onchange="sortStudents()">
+                        <option value="name">Namn (A-Ö)</option>
+                        <option value="name-desc">Namn (Ö-A)</option>
+                        <option value="grade">Betyg (Stigande)</option>
+                        <option value="grade-desc">Betyg (Fallande)</option>
+                    </select>
+                </div>
+                <div class="course-select">
+                    <label for="course">Kurs:</label>
+                    <select id="course" onchange="changeCourse()">
+                        <option value="databas">Databas</option>
+                        <option value="os">OS System</option>
+                        <option value="cloud">Cloud</option>
+                        <option value="programmering">Programmering</option>
+                    </select>
+                </div>
+                <div class="search">
+                    <input type="text" id="searchInput" placeholder="Filtrera på namn" oninput="filterStudents()">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <div class="student-list">
+                <!-- Student 1 -->
+                <div class="student-card" id="student-1">
+                    <div class="student-info">
+                        <h3>Darin Twana</h3>
+                        <p class="student-id">Student-ID: DT2025</p>
+                    </div>
+                    <div class="grade-section">
+                        <div class="grade-select">
+                            <label for="grade-1">Betyg:</label>
+                            <select id="grade-1" class="grade-dropdown">
+                                <option value="">Välj betyg</option>
+                                <option value="IG">IG</option>
+                                <option value="G">G</option>
+                                <option value="VG">VG</option>
+                            </select>
+                        </div>
+                        <div class="comment-section">
+                            <label for="comment-1">Kommentar:</label>
+                            <textarea id="comment-1" placeholder="Lägg till kommentar"></textarea>
+                        </div>
+                        <button class="btn save-btn" onclick="saveStudentData(1)">Spara</button>
+                    </div>
+                    <div class="saved-data" id="saved-data-1"></div>
+                </div>
+
+                <!-- Student 2 -->
+                <div class="student-card" id="student-2">
+                    <div class="student-info">
+                        <h3>Oliver Ullbrand</h3>
+                        <p class="student-id">Student-ID: OU2025</p>
+                    </div>
+                    <div class="grade-section">
+                        <div class="grade-select">
+                            <label for="grade-2">Betyg:</label>
+                            <select id="grade-2" class="grade-dropdown">
+                                <option value="">Välj betyg</option>
+                                <option value="IG">IG</option>
+                                <option value="G">G</option>
+                                <option value="VG">VG</option>
+                            </select>
+                        </div>
+                        <div class="comment-section">
+                            <label for="comment-2">Kommentar:</label>
+                            <textarea id="comment-2" placeholder="Lägg till kommentar"></textarea>
+                        </div>
+                        <button class="btn save-btn" onclick="saveStudentData(2)">Spara</button>
+                    </div>
+                    <div class="saved-data" id="saved-data-2"></div>
+                </div>
+
+                <!-- Student 3 -->
+                <div class="student-card" id="student-3">
+                    <div class="student-info">
+                        <h3>Enlil Hadad</h3>
+                        <p class="student-id">Student-ID: EH2025</p>
+                    </div>
+                    <div class="grade-section">
+                        <div class="grade-select">
+                            <label for="grade-3">Betyg:</label>
+                            <select id="grade-3" class="grade-dropdown">
+                                <option value="">Välj betyg</option>
+                                <option value="IG">IG</option>
+                                <option value="G">G</option>
+                                <option value="VG">VG</option>
+                            </select>
+                        </div>
+                        <div class="comment-section">
+                            <label for="comment-3">Kommentar:</label>
+                            <textarea id="comment-3" placeholder="Lägg till kommentar"></textarea>
+                        </div>
+                        <button class="btn save-btn" onclick="saveStudentData(3)">Spara</button>
+                    </div>
+                    <div class="saved-data" id="saved-data-3"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Get current course
+        function getCurrentCourse() {
+            return document.getElementById('course').value;
+        }
+        
+        // Logout function
+        function logout() {
+            sessionStorage.clear();
+            localStorage.removeItem("currentUser");
+            // Remove teacher flag
+            localStorage.removeItem("isTeacher");
+            // Redirect to login page
+            window.location.href = "login.html";
+        }
+        
+        // Set teacher flag when page loads
+        window.onload = function() {
+            // Mark this user as a teacher for return navigation
+            localStorage.setItem("isTeacher", "true");
+            
+            // Get the current course
+            const course = getCurrentCourse();
+            
+            // Load data for each student based on selected course
+            for (let i = 1; i <= 3; i++) {
+                loadStudentData(i, course);
+            }
+        };
+        
+        // Change course function
+        function changeCourse() {
+            const course = getCurrentCourse();
+            // Load data for each student based on selected course
+            for (let i = 1; i <= 3; i++) {
+                loadStudentData(i, course);
+            }
+        }
+        
+        function saveStudentData(studentId) {
+            const course = getCurrentCourse();
+            const grade = document.getElementById(`grade-${studentId}`).value;
+            const comment = document.getElementById(`comment-${studentId}`).value;
+            const savedDataElement = document.getElementById(`saved-data-${studentId}`);
+            
+            if (grade === "") {
+                alert("Vänligen välj ett betyg innan du sparar.");
+                return;
+            }
+            
+            // Get current date and time
+            const now = new Date();
+            const dateTime = now.toLocaleString('sv-SE');
+            
+            // Create and display saved data
+            savedDataElement.innerHTML = `
+                <div class="saved-info">
+                    <p><strong>Senast sparad:</strong> ${dateTime}</p>
+                    <p><strong>Kurs:</strong> ${document.getElementById('course').options[document.getElementById('course').selectedIndex].text}</p>
+                    <p><strong>Betyg:</strong> <span class="grade-badge ${grade.toLowerCase()}">${grade}</span></p>
+                    <p><strong>Kommentar:</strong> ${comment || "Ingen kommentar tillagd"}</p>
+                </div>
+            `;
+            
+            // Save to localStorage with course-specific key
+            const studentData = {
+                id: studentId,
+                grade: grade,
+                comment: comment,
+                savedTime: dateTime,
+                course: course
+            };
+            
+            // Store data with course-specific key
+            localStorage.setItem(`student-${studentId}-${course}`, JSON.stringify(studentData));
+            
+            // Show confirmation
+            alert(`Betyg och kommentar sparad för student ${document.querySelector(`#student-${studentId} h3`).textContent} i kursen ${document.getElementById('course').options[document.getElementById('course').selectedIndex].text}!`);
+        }
+        
+        // Load student data based on course
+        function loadStudentData(studentId, course) {
+            const savedData = localStorage.getItem(`student-${studentId}-${course}`);
+            const gradeSelect = document.getElementById(`grade-${studentId}`);
+            const commentField = document.getElementById(`comment-${studentId}`);
+            const savedDataElement = document.getElementById(`saved-data-${studentId}`);
+            
+            // Clear previous data
+            gradeSelect.value = "";
+            commentField.value = "";
+            savedDataElement.innerHTML = "";
+            
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                gradeSelect.value = data.grade;
+                commentField.value = data.comment;
+                
+                savedDataElement.innerHTML = `
+                    <div class="saved-info">
+                        <p><strong>Senast sparad:</strong> ${data.savedTime}</p>
+                        <p><strong>Kurs:</strong> ${document.getElementById('course').options[document.getElementById('course').selectedIndex].text}</p>
+                        <p><strong>Betyg:</strong> <span class="grade-badge ${data.grade.toLowerCase()}">${data.grade}</span></p>
+                        <p><strong>Kommentar:</strong> ${data.comment || "Ingen kommentar tillagd"}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Filter students by name
+        function filterStudents() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const studentCards = document.querySelectorAll('.student-card');
+            
+            studentCards.forEach(card => {
+                const studentName = card.querySelector('h3').textContent.toLowerCase();
+                if (studentName.includes(searchText)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Sort students by name or grade
+        function sortStudents() {
+            const sortOption = document.getElementById('sort').value;
+            const studentList = document.querySelector('.student-list');
+            const studentCards = Array.from(document.querySelectorAll('.student-card'));
+            
+            studentCards.sort((a, b) => {
+                if (sortOption === 'name' || sortOption === 'name-desc') {
+                    const nameA = a.querySelector('h3').textContent.toLowerCase();
+                    const nameB = b.querySelector('h3').textContent.toLowerCase();
+                    
+                    return sortOption === 'name' ? 
+                        nameA.localeCompare(nameB) : 
+                        nameB.localeCompare(nameA);
+                } else if (sortOption === 'grade' || sortOption === 'grade-desc') {
+                    const getGradeValue = (grade) => {
+                        if (!grade) return 0;
+                        if (grade === 'IG') return 1;
+                        if (grade === 'G') return 2;
+                        if (grade === 'VG') return 3;
+                        return 0;
+                    };
+                    
+                    const idA = a.id.split('-')[1];
+                    const idB = b.id.split('-')[1];
+                    
+                    const gradeA = document.getElementById(`grade-${idA}`).value;
+                    const gradeB = document.getElementById(`grade-${idB}`).value;
+                    
+                    return sortOption === 'grade' ? 
+                        getGradeValue(gradeA) - getGradeValue(gradeB) : 
+                        getGradeValue(gradeB) - getGradeValue(gradeA);
+                }
+            });
+            
+            // Remove existing cards and re-append in sorted order
+            studentCards.forEach(card => studentList.removeChild(card));
+            studentCards.forEach(card => studentList.appendChild(card));
+        }
+    </script>
+</body>
+</html>
