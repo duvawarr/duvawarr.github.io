@@ -18,7 +18,7 @@
             </nav>
             <div class="user-panel">
                 <a href="support.html"><i class="fas fa-question-circle"></i> Support</a>
-                <a href="login.html" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logga ut</a>
+                <a href="index.html" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logga ut</a>
             </div>
         </header>
         
@@ -66,7 +66,7 @@
             // Remove any teacher flag
             localStorage.removeItem("isTeacher");
             // Explicitly redirect to ensure the page changes
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         }
         
         // Set student flag when page loads
@@ -88,7 +88,7 @@
             // Check if user is logged in
             if (!studentId || studentId < 1 || studentId > names.length) {
                 alert("Ogiltig inloggning. Vänligen logga in igen.");
-                window.location.href = "login.html";
+                window.location.href = "index.html";
             } else {
                 // Display student information
                 const info = names[studentId - 1];
@@ -110,7 +110,7 @@
         // Check if user is logged in
         if (!studentId || studentId < 1 || studentId > names.length) {
             alert("Ogiltig inloggning. Vänligen logga in igen.");
-            window.location.href = "login.html";
+            window.location.href = "index.html";
         } else {
             // Display student information
             const info = names[studentId - 1];
